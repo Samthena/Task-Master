@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="content">
+    <div class="center">
+
+    <h1>Search Tasks</h1>
+
+    <form action="{{ url_for('search') }}" method="get">
+        <input type="text" name="q" placeholder="Search by text or ID">
+        <button type="submit">Search</button>
+    </form>
+
+<br>
+
+{% if tasks %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Task</th>
+        <th>Added</th>
+        <th>Actions</th>
+    </tr>
+
+{% for task in tasks %}
+<tr>
+    <td>{{ task.unique_id }}</td>
+    <td>{{ task.content }}</td>
+    <td>{{ task.date_created }}</td>
+    <td>
+        <a href="{{ url_for('delete', id=task.id) }}">Delete</a>
+        <br>
+        <a href="{{ url_for('update', id=task.id) }}">Update</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+<br>
+    <a href="{{ url_for('index') }}">Back</a>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+
+    <div class="center">
+        
+    <h1 style="text-align: center;">Task Master</h1>
+    {% if tasks|length < 1 %}
+    <h1 style="text-align: center;">There are no tasks, Create one Below!</h1>
+    {% else  %}
+    <table border=1 frame=box rules=all style="width:70%">
+        <tr>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Added</th>
+            <th>Unique ID</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.content }}</td>
+                <td>
+                    <form action="{{ url_for('update_status', id=task.id) }}" method="POST">
+                        <select name="status" onchange="this.form.submit()" class="status-select {{ task.status|lower|replace(' ', '-' ) }}">
+                            <option value="Not started" {% if task.status == 'Not Started'%}selected{% endif %}>Not Started</option>
+                            <option value="In Progress" {% if task.status == 'In Progress'%}selected{% endif %}>In Progress</option>
+                            <option value="Finished" {% if task.status == 'Finished'%}selected{% endif %}>Finished</option>
+                        </select>
+                    </form>
+                </td>
+                <td>{{ task.date_created.date() }}</td>
+                <td>{{ task.unique_id}}</td>
+                
+                <td>
+                    <a href="/delete/{{task.id}}">Delete</a>   
+                    <br>
+                    <a href="/update/{{task.id}}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="{{ url_for('search') }}">Search Tasks</a>
+    {% endif %}
+    <form action="/" method="POST">
+        <input type="text" name="content" id="content">
+        <input type="submit" value="Add Task">
+    </form>
+
+</div>
+
+</div>
+{% endblock %}
